@@ -17,7 +17,6 @@ public class DBUtil {
     }
 
     public static Connection getConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
         return ds.getConnection();
     }
 
