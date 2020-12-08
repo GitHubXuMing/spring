@@ -1,5 +1,6 @@
 package com.abc.dao.idao;
 
+import com.abc.controller.vo.DelVO;
 import com.abc.dao.entity.Emp;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface IEmpDao {
     void update(Emp emp)throws Exception;
 
     List<Emp> findByDept(int deptno)throws Exception;
+
+    void delBatch(List<DelVO> delVOList)throws Exception;
 }

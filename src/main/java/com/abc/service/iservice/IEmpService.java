@@ -1,6 +1,7 @@
 package com.abc.service.iservice;
 
 import com.abc.common.Res;
+import com.abc.controller.vo.DelVO;
 import com.abc.dao.entity.Emp;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface IEmpService {
 
     Res<List<Emp>> findByDept(int deptno);
 
+    Res delBatch(List<DelVO> delVOList);
 }

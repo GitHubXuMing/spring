@@ -2,61 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>报表</title>
+    <title>批量删除</title>
 </head>
 <body>
+<ul id="emps">
+    <li>1编号的员工信息<input type="checkbox" value="1"></li>
+    <li>2编号的员工信息<input type="checkbox" value="2"></li>
+    <li>3编号的员工信息<input type="checkbox" value="3"></li>
+    <li>4编号的员工信息<input type="checkbox" value="4"></li>
+    <li>5编号的员工信息<input type="checkbox" value="5"></li>
+    <li>6编号的员工信息<input type="checkbox" value="6"></li>
+    <li>7编号的员工信息<input type="checkbox" value="7"></li>
+</ul>
+<button id="delBtn">批量删除</button>
 
-部门:
-<select id="depts">
-</select>
-薪资范围：<input type="number" value="0" id="min">--<input type="number" value="99999" id="max">
-
-<button id="query">查询员工</button>
-
-<hr>
-<table border="1" id="empsInfo">
-    <thead>
-    <th>部门名称</th>
-    <th>部门地址</th>
-    <th>员工姓名</th>
-    <th>工资</th>
-    </thead>
-</table>
 <script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-		$(function(){
-
-		$("#query").click(function(){
-		    $.ajax({
-                url:"http://localhost:8080/reportDeptEmp",
+    $(function(){
+        $("#delBtn").click(function(){
+            var data = [];
+            $("#emps input:checkbox:checked").each(function(){
+                data.push({empno:$(this).val()})
+            })
+            console.log(JSON.stringify(data))
+            $.ajax({
+                url:"http://localhost:8080/empdelbatch",
                 type:"post",
                 data:{
-                    "deptno":$("#depts").val(),
-                    "min":$("#min").val(),
-                    "max":$("#max").val()
+                    empnos:JSON.stringify(data)  //json格式传参
                 },
                 success:function(res){
                     console.log(res)
                 }
-            })
-        });
 
-		$.ajax({
-			url:"http://localhost:8080/deptall",
-			type:"get",
-			success:function(res){
-				var resObj = JSON.parse(res);
-				var depts = resObj.data;
-				for(i in depts){
-					var dept = depts[i];
-				    $optionNode = $("<option></option>");
-				    $optionNode.text(dept.dname);
-					$optionNode.val(dept.deptno);
-					$("#depts").append($optionNode);
-				}
-			}
-		})
-	})
+            })
+        })
+    })
+
+
 </script>
 </body>
 </html>

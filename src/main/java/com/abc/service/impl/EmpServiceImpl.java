@@ -3,6 +3,7 @@ package com.abc.service.impl;
 import com.abc.common.Comm;
 import com.abc.common.Res;
 import com.abc.common.ResEnum;
+import com.abc.controller.vo.DelVO;
 import com.abc.dao.entity.Emp;
 import com.abc.dao.factory.DaoFactory;
 import com.abc.dao.idao.IEmpDao;
@@ -96,5 +97,19 @@ public class EmpServiceImpl implements IEmpService {
             e.printStackTrace();
         }
         return (emps != null&& emps.size()>0)?Res.success(ResEnum.SUCCESS,emps):Res.error();
+    }
+
+    @Override
+    public Res delBatch(List<DelVO> delVOList) {
+        if(delVOList == null || delVOList.size() == 0){
+            return Res.error(ResEnum.ERROR_PARAMS_IN_DELBATCH);
+        }
+        try {
+            empDao.delBatch(delVOList);
+            return Res.success(ResEnum.SUCCESS_DEL_BATCH);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Res.error();
     }
 }
