@@ -1,45 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>批量删除</title>
-</head>
-<body>
-<ul id="emps">
-    <li>1编号的员工信息<input type="checkbox" value="1"></li>
-    <li>2编号的员工信息<input type="checkbox" value="2"></li>
-    <li>3编号的员工信息<input type="checkbox" value="3"></li>
-    <li>4编号的员工信息<input type="checkbox" value="4"></li>
-    <li>5编号的员工信息<input type="checkbox" value="5"></li>
-    <li>6编号的员工信息<input type="checkbox" value="6"></li>
-    <li>7编号的员工信息<input type="checkbox" value="7"></li>
-</ul>
-<button id="delBtn">批量删除</button>
-
-<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript">
-    $(function(){
-        $("#delBtn").click(function(){
-            var data = [];
-            $("#emps input:checkbox:checked").each(function(){
-                data.push({empno:$(this).val()})
-            })
-            console.log(JSON.stringify(data))
-            $.ajax({
-                url:"http://localhost:8080/empdelbatch",
-                type:"post",
-                data:{
-                    empnos:JSON.stringify(data)  //json格式传参
-                },
-                success:function(res){
-                    console.log(res)
-                }
-
-            })
-        })
-    })
-
-
-</script>
-</body>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>首页</title>
+		<link rel="stylesheet" type="text/css" href="js/bootstrap.min.css"/>
+	</head>
+	<body>
+		<div class="container">
+		<div class="row">
+			<table class="table col-md-offset-2 col-md-8">
+				<tr>
+					<td>用户名 <span class="glyphicon glyphicon-user" style="color: green;font-size: 2rem;"></span></td>
+					<td>
+						<input type="text"  id="username" value="root" />
+						<span id="existMsg"></span>
+						</td>
+				</tr>
+				<tr>
+					<td>密码<span class="glyphicon glyphicon-bell" style="color: gray;font-size: 2rem;"></span></td>
+					<td><input type="password" id="password" value="root"/></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:void(0)" id="loginBtn" class="btn btn-success">登录</a></td>
+					<td><a href="http://localhost:8080/reg.html" class="btn btn-default">注册</a></td>
+				</tr>
+			</table>
+			<p id="loginErrMsg"></p>
+		</div>
+		</div>
+		<script src="js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				
+				$("#loginBtn").click(function(){
+					$.ajax({
+						url:"http://localhost:8080/login",
+						type:"post",
+						data:{
+							"username":$("#username").val(),
+							"password":$("#password").val()
+						},
+						success:function(res){
+						    var result = JSON.parse(res);
+							if(result.status == 200){
+								window.location.href = "http://localhost:8080/empbypage";
+							}else{
+								$("#loginErrMsg").css("color","red").text(result.msg);
+							}
+						}
+					})
+				})
+				
+				
+				$("#username").blur(function(){
+					$.ajax({
+						url:"http://localhost:8080/userexist",
+						type:"post",
+						data:{
+							"username":$("#username").val()
+						},
+						success:function(res){
+						    var result = JSON.parse(res);
+							if(result.status == 201){
+								$("#existMsg").css("color","green").text(result.msg);
+							}else{
+								$("#existMsg").css("color","red").text(result.msg);
+							}
+						}
+					})
+				})
+			})
+		</script>
+	</body>
 </html>
