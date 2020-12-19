@@ -8,7 +8,11 @@ import com.abc.dao.entity.Emp;
 import com.abc.dao.idao.IEmpDao;
 import com.abc.service.iservice.IEmpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Service("empService")
@@ -97,6 +101,7 @@ public class EmpServiceImpl implements IEmpService {
         return (emps != null&& emps.size()>0)?Res.success(ResEnum.SUCCESS,emps):Res.error();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED,propagation = Propagation.REQUIRED)
     @Override
     public Res delBatch(List<DelVO> delVOList) {
         if(delVOList == null || delVOList.size() == 0){

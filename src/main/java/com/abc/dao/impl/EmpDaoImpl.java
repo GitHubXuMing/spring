@@ -118,33 +118,33 @@ public class EmpDaoImpl implements IEmpDao {
     //事务  tansaction
     @Override
     public void delBatch(List<DelVO> delVOList) throws Exception {
-        Connection con = DBUtil.getConnection();
-        StringBuilder buffer = new StringBuilder("delete from emp where empno in (");
-        for(int i=0;i<delVOList.size();i++){
-            if(i == delVOList.size()-1){
-                buffer.append(delVOList.get(i).getEmpno()+")");
-            }else{
-                buffer.append(delVOList.get(i).getEmpno()+",");
-            }
-        }
-        String sql = buffer.toString();
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.executeUpdate();
-        DBUtil.close(null,ps,con);
 //        Connection con = DBUtil.getConnection();
-//        con.setAutoCommit(false);//1-关闭自动提交
-//        Statement ps = con.createStatement();
-//        try {
-//            for (DelVO dv : delVOList) {
-//                String sql = "delete from emp where empno=" + dv.getEmpno();
-//                ps.addBatch(sql);
+//        StringBuilder buffer = new StringBuilder("delete from emp where empno in (");
+//        for(int i=0;i<delVOList.size();i++){
+//            if(i == delVOList.size()-1){
+//                buffer.append(delVOList.get(i).getEmpno()+")");
+//            }else{
+//                buffer.append(delVOList.get(i).getEmpno()+",");
 //            }
-//            ps.executeBatch();
-//            con.commit();//2-执行成功，手动提交
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            con.rollback();//3-出现异常，数据库回滚
 //        }
-//        DBUtil.close(null, ps, con);
+//        String sql = buffer.toString();
+//        PreparedStatement ps = con.prepareStatement(sql);
+//        ps.executeUpdate();
+//        DBUtil.close(null,ps,con);
+        Connection con = DBUtil.getConnection();
+        con.setAutoCommit(false);//1-关闭自动提交
+        Statement ps = con.createStatement();
+        try {
+            for (DelVO dv : delVOList) {
+                String sql = "delete from emp where empno=" + dv.getEmpno();
+                ps.addBatch(sql);
+            }
+            ps.executeBatch();
+//            con.commit();//2-执行成功，手动提交
+        }catch(Exception e){
+            e.printStackTrace();
+            con.rollback();//3-出现异常，数据库回滚
+        }
+        DBUtil.close(null, ps, con);
     }
 }
